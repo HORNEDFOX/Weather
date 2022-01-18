@@ -1,25 +1,25 @@
-class Weather{
+import 'package:weather/forecast.dart';
+
+class Weather extends Forecast{
   final String city;
   final String country;
-  final int temp;
-  final String weather;
   final int humidity;
   final int windSpeed;
-  final double precipitation;
   final int wind;
   final int pressure;
 
-  Weather({required this.city, required this.country, required this.weather, required this.temp, required this.humidity, required this.windSpeed, required this.wind, required this.pressure, required this.precipitation});
 
+  Weather({required String weather, required int temp, required this.city, required this.country, required this.humidity, required this.windSpeed, required this.wind, required this.pressure}) : super(weather: weather, temp: temp);
+
+  @override
   factory Weather.fromJson(Map<String, dynamic> json){
     return Weather(
-      city: json['name'] as String,
-      country: json['sys']['country'] as String,
-      temp: double.parse(json['main']['temp'].toString()).toInt() as int,
+      city: json['name'],
+      country: json['sys']['country'],
+      temp: double.parse(json['main']['temp'].toString()).toInt(),
       weather: json['weather'][0]['main'] as String,
       humidity: json['main']['humidity'] as int,
-      windSpeed: double.parse(json['wind']['speed'].toString()).toInt() as int,
-      precipitation: json['snow']['snow.1h'] == null ? 0 : json['snow']['snow.1h'] as double,
+      windSpeed: double.parse(json['wind']['speed'].toString()).toInt(),
       wind: json['wind']['deg'] as int,
       pressure: json['main']['pressure'] as int,
     );
@@ -52,21 +52,21 @@ class Weather{
                     {
                       return "NW";
                     }
-
     return "No data";
   }
 
+  @override
   void display()
   {
-      print("Город: $city");
-      print("Страна: $country");
+    print("Город: $city");
+    print("Страна: $country");
       print("Погода: $weather");
       print("Температура: $temp°C");
       print("Влажность: $humidity%");
       print("Скорость ветра: $windSpeed km/h");
       print("Градусы: $wind");
-      print("Осадки: $precipitation mm");
       print("Направление ветра: " + windDirection());
       print("Атмосферное давление: $pressure hPA");
+    print("\n______________________________________________\n");
   }
 }

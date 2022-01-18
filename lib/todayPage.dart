@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather/serviceWeather.dart';
 import 'package:weather/weather.dart';
+import 'package:weather/geolocatioan.dart' as l;
 
 class TodayPage extends StatefulWidget {
   const TodayPage({Key? key}) : super(key: key);
@@ -218,7 +219,12 @@ class todayBodyPage extends StatelessWidget {
                         style: TextButton.styleFrom(
                           textStyle: const TextStyle(fontSize: 30),
                         ),
-                        onPressed: () {WeatherService.fetchCurrentWeather(55.644001, 27.04545);},
+                        onPressed: () async {
+                          Position position = await l.getGeoLocationPosition();
+                          l.GetAddressFromLatLong(position);
+                          WeatherService.fetchCurrentWeather(position.latitude, position.longitude);
+                          WeatherService.fetchHourlyWeather(position.latitude, position.longitude);
+                          },
                         child: const Text('Share'),
                       ),
                     ],
