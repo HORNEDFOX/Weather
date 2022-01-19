@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:weather/weatherBloc.dart';
+import 'package:weather/weatherState.dart';
+import 'package:grouped_list/grouped_list.dart';
+import 'package:intl/intl.dart';
 
 
 class ForecastPage extends StatefulWidget {
@@ -13,38 +17,66 @@ class ForecastPage extends StatefulWidget {
 }
 
 
-  class _ForecastPageState extends State<ForecastPage>
-  {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(113, 128, 154, 0.1),
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 1.0,
-        backgroundColor: const Color.fromRGBO(74, 153, 230, 0.8),
-        title: const Text("Forecast"),
-      ),
-      body: ListView(
-        children: <Widget> [
-          ForecastCard(),
-          ForecastCard(),
-          ForecastCard(),
-          ForecastCard(),
-          ForecastCard(),
-          ForecastCard(),
-          ForecastCard(),
-          ForecastCard(),
-          ForecastCard(),
-          ForecastCard(),
-        ],
-      ),
-    );
+  class _ForecastPageState extends State<ForecastPage> {
+
+    @override
+    Widget build(BuildContext context) {
+      return BlocBuilder<WeatherBloc, WeatherState>(
+          builder: (context, state) {
+            if (state is WeatherEmptyState) {
+              return Center(
+                child: Text(
+                  'No data received. Press button "Load"',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              );
+            }
+
+            if (state is WeatherLoadingState) {
+              return Center(
+                child: Text(
+                  'No data received. Press button "Load"',
+                  style: TextStyle(fontSize: 20.0),
+                ),
+              );
+            }
+
+            if (state is WeatherLoadedState) {
+              return Scaffold(
+                backgroundColor: const Color.fromRGBO(113, 128, 154, 0.1),
+                appBar: AppBar(
+                  centerTitle: true,
+                  elevation: 1.0,
+                  backgroundColor: const Color.fromRGBO(74, 153, 230, 0.8),
+                  title: Text("${state.loadedWeather.city}"),
+                ),
+                body: GroupedListView<dynamic, DateTime>(
+                    elements: state.loadedForecast,
+                    groupBy: (item) => DateTime(
+                      item.date.year,
+                      item.date.month,
+                      item.date.day,
+                    ),
+                    groupSeparatorBuilder: (item) => Padding(padding: EdgeInsets.all(10),child: Text(item.weekday == DateTime.now().weekday ? 'Today' : '${DateFormat('EEEE').format(item)} ', style: TextStyle(fontSize: 25.0),)),
+                    itemBuilder: (context, item){
+                    return ForecastCard(weather: '${item.weather}', temp: '${item.temp}', time:  '${item.date.hour}:${item.date.minute}0');
+                    },
+                ),
+              );
+            }
+            return Center();
+          }
+      );
+    }
   }
-}
 
 class ForecastCard extends StatelessWidget {
-  const ForecastCard({Key? key}) : super(key: key);
+
+  late final String weather;
+  late final String temp;
+  late final String time;
+
+  ForecastCard({required this.weather, required this.temp, required this.time});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +123,7 @@ class ForecastCard extends StatelessWidget {
                     height: 45,
                     width: 100.0,
                     alignment: Alignment.bottomLeft,
-                    child: Text("19:00", style: TextStyle(fontSize: 23.sp),),
+                    child: Text("${time}", style: TextStyle(fontSize: 23.sp),),
                     ),
       ]
                 ),
@@ -100,7 +132,7 @@ class ForecastCard extends StatelessWidget {
                       Container(
                         height: 35.0,
                         width: 100.0,
-                        child: Text("Weather", style: TextStyle(fontSize: 18.sp),),),
+                        child: Text('${weather}', style: TextStyle(fontSize: 18.sp),),),
                     ]
                 )
               ],
@@ -115,7 +147,7 @@ class ForecastCard extends StatelessWidget {
                   alignment: Alignment.center,
                   height: 80.0,
                   width: 80.0,
-                  child: Text("22°", style: TextStyle(fontSize: 50.sp),),),
+                  child: Text("${temp}°", style: TextStyle(fontSize: 50.sp),),),
               ],
             ),
             ],

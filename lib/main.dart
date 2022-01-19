@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/forecastPage.dart';
 import 'package:weather/todayPage.dart';
+import 'package:weather/weatherBloc.dart';
+import 'package:weather/weatherRepository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,9 +46,13 @@ class _MyHomePageState extends State<MyHomePage> {
     _pageController.jumpToPage(selectedIndex);
   }
 
+  final weatherRepository = WeatherRepository();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider<WeatherBloc>(
+        create: (context) => WeatherBloc(weatherRepository),
+    child: Scaffold(
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -78,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
         elevation: 2.0,
         onTap: _onItemTapped,
       ),
+    ),
     );
   }
 }
