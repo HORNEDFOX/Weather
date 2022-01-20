@@ -5,6 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:weather/weatherBloc.dart';
 import 'package:weather/weatherEvent.dart';
 import 'package:weather/weatherState.dart';
+import 'package:share/share.dart';
+
+late WeatherLoadedState state;
+
 
 class TodayPage extends StatefulWidget {
   const TodayPage({Key? key}) : super(key: key);
@@ -22,8 +26,8 @@ class _TodayPageState extends State<TodayPage>
           appBar: AppBar(
             centerTitle: true,
             elevation: 1.0,
-            backgroundColor: const Color.fromRGBO(74, 153, 230, 0.8),
-            title: const Text("Today"),
+            backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
+            title: const Text("Today", style: TextStyle(color: const Color.fromRGBO(40, 40, 40, 0.8),),),
           ),
           body: todayBodyPage(),
         );
@@ -40,7 +44,7 @@ class todayBodyPage extends StatelessWidget {
           if (state is WeatherEmptyState) {
               return Center(
               child: ScreenUtilInit(
-                designSize: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+                designSize: const Size(360, 690),
                 minTextAdapt: true,
                 builder: () => RefreshIndicator(
                             onRefresh: () async {
@@ -49,7 +53,12 @@ class todayBodyPage extends StatelessWidget {
                             child: Stack(
                                 children: <Widget>[
                                       ListView(),
-                                      Text("1"),
+                                  Center(
+                                  child: Text(
+                                    'No data received',
+                                    style: TextStyle(fontSize: 20.0),
+                                  ),
+                                  ),
                                 ]
                             ),
                       ),
@@ -90,7 +99,24 @@ class todayBodyPage extends StatelessWidget {
                         return weatherBloc.add(WeatherRefreshEvent());
                       },
                       child: Stack(
-                            children: <Widget>[ListView(),
+                            children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topRight,
+                                          end: Alignment.bottomLeft,
+                                          colors: state.loadedWeather.temp <= 15 ? ([
+                                            const Color.fromRGBO(167, 112, 239, 1),
+                                            const Color.fromRGBO(207, 139, 243, 1),
+                                            const Color.fromRGBO(253, 185, 155, 1),
+                                          ]) : [
+                                            const Color.fromRGBO(255, 95, 109, 1),
+                                            const Color.fromRGBO(255, 195, 113, 1),
+                                          ],
+                                        )
+                                    ),
+                                  ),
+                              ListView(),
                                   Center(
                                         child: Container(
                                             height: MediaQuery
@@ -108,6 +134,7 @@ class todayBodyPage extends StatelessWidget {
                                                         Row(
                                                               children: [
                                                                     Container(
+                                                                      margin: EdgeInsets.fromLTRB(0,0,0,30.0),
                                                                           child: SizedBox(
                                                                                 width: MediaQuery
                                                                                     .of(
@@ -116,9 +143,9 @@ class todayBodyPage extends StatelessWidget {
                                                                                     .width,
                                                                                 child: SvgPicture
                                                                                     .asset(
-                                                                                      "assets/image/sunny.svg",
-                                                                                      width: 200
-                                                                                          .w,
+                                                                                  "${state.loadedWeather.getIconWeather()}",
+                                                                                      width: 170.w,
+                                                                                  color: Colors.white,
                                                                                 ),
                                                                           ),
                                                                     ),
@@ -132,7 +159,7 @@ class todayBodyPage extends StatelessWidget {
                                                                               0,
                                                                               0,
                                                                               0,
-                                                                              10),
+                                                                              0),
                                                                           child: SizedBox(
                                                                               width: MediaQuery
                                                                                   .of(
@@ -143,8 +170,8 @@ class todayBodyPage extends StatelessWidget {
                                                                                     textAlign: TextAlign
                                                                                         .center,
                                                                                     style: TextStyle(
-                                                                                        fontSize: 30
-                                                                                            .sp),)
+                                                                                        fontSize: 30.sp,
+                                                                                        color: Colors.white),)
                                                                           ),
                                                                     ),
                                                               ],
@@ -163,23 +190,25 @@ class todayBodyPage extends StatelessWidget {
                                                                                       textAlign: TextAlign
                                                                                           .center,
                                                                                       style: TextStyle(
-                                                                                          fontSize: 45
-                                                                                              .sp),),
+                                                                                          fontSize: 45.sp,
+                                                                                          color: Colors.white),),
                                                                           ),
                                                                     ),
                                                               ],
                                                         ),
                                                         Container(
-                                                              margin: EdgeInsets
-                                                                  .fromLTRB(
-                                                                  30, 30, 30,
-                                                                  30),
+                                                              margin: EdgeInsets.fromLTRB(70, 10, 70,30),
+                                                              padding: EdgeInsets.fromLTRB(0, 15, 0,15),
+                                                          decoration: BoxDecoration(
+                                                            color: Color.fromRGBO(255, 255, 255, 0.2),
+                                                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                                                          ),
                                                               child: Row(
                                                                     mainAxisAlignment: MainAxisAlignment
                                                                         .center,
                                                                     children: [
                                                                           Container(
-                                                                                height: 150.0,
+                                                                                height: 170.0.h,
                                                                                 child: Column(
                                                                                     mainAxisAlignment: MainAxisAlignment
                                                                                         .start,
@@ -189,11 +218,12 @@ class todayBodyPage extends StatelessWidget {
                                                                                                       Container(
                                                                                                             alignment: Alignment
                                                                                                                 .topCenter,
+                                                                                                        margin: EdgeInsets.symmetric(vertical: 10.0.h),
                                                                                                             child: SvgPicture
                                                                                                                 .asset(
-                                                                                                                  "assets/image/sunny.svg",
-                                                                                                                  height: 70
-                                                                                                                      .h,
+                                                                                                                  "assets/image/drop-cloud.svg",
+                                                                                                                  height: 40.h,
+
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -210,7 +240,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                 ),
                                                                           ),
                                                                           Container(
-                                                                                height: 150.0,
+                                                                            height: 170.0.h,
                                                                                 child: Column(
                                                                                     mainAxisAlignment: MainAxisAlignment
                                                                                         .end,
@@ -220,11 +250,12 @@ class todayBodyPage extends StatelessWidget {
                                                                                                       Container(
                                                                                                             alignment: Alignment
                                                                                                                 .bottomCenter,
+                                                                                                        margin: EdgeInsets.symmetric(vertical: 10.0.h),
                                                                                                             child: SvgPicture
                                                                                                                 .asset(
-                                                                                                                  "assets/image/sunny.svg",
-                                                                                                                  height: 70
-                                                                                                                      .h,
+                                                                                                                  "assets/image/wind.svg",
+                                                                                                                  height: 40.h,
+
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -241,7 +272,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                 ),
                                                                           ),
                                                                           Container(
-                                                                                height: 150.0,
+                                                                            height: 170.0.h,
                                                                                 child: Column(
                                                                                     mainAxisAlignment: MainAxisAlignment
                                                                                         .start,
@@ -251,11 +282,12 @@ class todayBodyPage extends StatelessWidget {
                                                                                                       Container(
                                                                                                             alignment: Alignment
                                                                                                                 .topCenter,
+                                                                                                        margin: EdgeInsets.symmetric(vertical: 10.0.h),
                                                                                                             child: SvgPicture
                                                                                                                 .asset(
-                                                                                                                  "assets/image/sunny.svg",
-                                                                                                                  height: 70
-                                                                                                                      .h,
+                                                                                                                  "assets/image/drop.svg",
+                                                                                                                  height: 40.h,
+
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -272,7 +304,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                 ),
                                                                           ),
                                                                           Container(
-                                                                                height: 150,
+                                                                            height: 170.0.h,
                                                                                 child: Column(
                                                                                     mainAxisAlignment: MainAxisAlignment
                                                                                         .end,
@@ -280,11 +312,12 @@ class todayBodyPage extends StatelessWidget {
                                                                                           Row(
                                                                                                 children: [
                                                                                                       Container(
+                                                                                                        margin: EdgeInsets.symmetric(vertical: 10.0.h),
                                                                                                             child: SvgPicture
                                                                                                                 .asset(
-                                                                                                                  "assets/image/sunny.svg",
-                                                                                                                  height: 70
-                                                                                                                      .h,
+                                                                                                                  "assets/image/compass.svg",
+                                                                                                                  height: 40.h,
+
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -298,7 +331,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                     ]),
                                                                           ),
                                                                           Container(
-                                                                                height: 150.0,
+                                                                            height: 170.0.h,
                                                                                 alignment: Alignment
                                                                                     .topCenter,
                                                                                 child: Column(
@@ -308,11 +341,12 @@ class todayBodyPage extends StatelessWidget {
                                                                                           Row(
                                                                                                 children: [
                                                                                                       Container(
+                                                                                                        margin: EdgeInsets.symmetric(vertical: 10.0.h),
                                                                                                             child: SvgPicture
                                                                                                                 .asset(
-                                                                                                                  "assets/image/sunny.svg",
-                                                                                                                  height: 70
-                                                                                                                      .h,
+                                                                                                                  "assets/image/degree-celsius.svg",
+                                                                                                                  height: 40.h,
+
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -341,9 +375,12 @@ class todayBodyPage extends StatelessWidget {
                                                                                 textStyle: const TextStyle(
                                                                                     fontSize: 30),
                                                                           ),
-                                                                          onPressed: () {},
+                                                                          onPressed: () {Share.share("Hello! Weather on ${state.loadedWeather.date.day}.${state.loadedWeather.date.month}.${state.loadedWeather.date.year}:\n\n"
+                                                                              "Location: ${state.loadedWeather.city}, ${state.loadedWeather.country}\nWeather: ${state.loadedWeather.getEmojiWeather()} ${state.loadedWeather.temp}°C ${state.loadedWeather.weather}\n"
+                                                                              "\nOther parameters:\nHumidity: ${state.loadedWeather.humidity}%\nWind: ${state.loadedWeather.windSpeed} km/h ${state.loadedWeather.windDirection()}\n"
+                                                                              "Pressure: ${state.loadedWeather.pressure} hPa");},
                                                                           child: const Text(
-                                                                              'Share'),
+                                                                              'Weather Today Share', style: TextStyle(color: Colors.white)),
                                                                     ),
                                                               ],
                                                         ),
@@ -379,4 +416,5 @@ class todayBodyPage extends StatelessWidget {
     );
   }
 }
+
 
