@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
         unselectedItemColor: const Color.fromRGBO(80, 80, 80, 0.4),
         selectedItemColor: const Color.fromRGBO(40, 40, 40, 0.8),
         backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
-        elevation: 2.0,
+        elevation: 0.0,
         onTap: _onItemTapped,
       ),
     ),

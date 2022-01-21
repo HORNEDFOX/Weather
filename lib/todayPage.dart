@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,8 +7,7 @@ import 'package:weather/weatherBloc.dart';
 import 'package:weather/weatherEvent.dart';
 import 'package:weather/weatherState.dart';
 import 'package:share/share.dart';
-
-late WeatherLoadedState state;
+import 'package:weather/colorBackground.dart';
 
 
 class TodayPage extends StatefulWidget {
@@ -52,13 +52,8 @@ class todayBodyPage extends StatelessWidget {
                             },
                             child: Stack(
                                 children: <Widget>[
-                                      ListView(),
-                                  Center(
-                                  child: Text(
-                                    'No data received',
-                                    style: TextStyle(fontSize: 20.0),
-                                  ),
-                                  ),
+                                  EmptyState('Today Weather', 'To download the weather for today and the next 5 days, you need to refresh the Today page by pulling it down.'),
+                                  ListView(),
                                 ]
                             ),
                       ),
@@ -66,11 +61,31 @@ class todayBodyPage extends StatelessWidget {
             );
           }
 
+          if (state is WeatherErrorState) {
+            return Center(
+              child: ScreenUtilInit(
+                designSize: const Size(360, 690),
+                minTextAdapt: true,
+                builder: () => RefreshIndicator(
+                  onRefresh: () async {
+                    return weatherBloc.add(WeatherRefreshEvent());
+                  },
+                  child: Stack(
+                      children: <Widget>[
+                        EmptyState('Oops!', 'Oops! Something went wrong.\nCheck your internet connection and geolocation on your device.'),
+                        ListView(),
+                      ]
+                  ),
+                ),
+              ),
+            );
+          }
+
           if(state is WeatherLoadingState)
           {
                 return Center(
           child: ScreenUtilInit(
-            designSize: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+            designSize: Size(360, 690),
             minTextAdapt: true,
           builder: () => RefreshIndicator(
                       onRefresh: () async {
@@ -105,14 +120,7 @@ class todayBodyPage extends StatelessWidget {
                                         gradient: LinearGradient(
                                           begin: Alignment.topRight,
                                           end: Alignment.bottomLeft,
-                                          colors: state.loadedWeather.temp <= 15 ? ([
-                                            const Color.fromRGBO(167, 112, 239, 1),
-                                            const Color.fromRGBO(207, 139, 243, 1),
-                                            const Color.fromRGBO(253, 185, 155, 1),
-                                          ]) : [
-                                            const Color.fromRGBO(255, 95, 109, 1),
-                                            const Color.fromRGBO(255, 195, 113, 1),
-                                          ],
+                                          colors: colorBackground(state.loadedWeather.temp),
                                         )
                                     ),
                                   ),
@@ -134,7 +142,7 @@ class todayBodyPage extends StatelessWidget {
                                                         Row(
                                                               children: [
                                                                     Container(
-                                                                      margin: EdgeInsets.fromLTRB(0,0,0,30.0),
+                                                                      margin: EdgeInsets.fromLTRB(0,0,0,30.0.sp),
                                                                           child: SizedBox(
                                                                                 width: MediaQuery
                                                                                     .of(
@@ -197,10 +205,10 @@ class todayBodyPage extends StatelessWidget {
                                                               ],
                                                         ),
                                                         Container(
-                                                              margin: EdgeInsets.fromLTRB(70, 10, 70,30),
-                                                              padding: EdgeInsets.fromLTRB(0, 15, 0,15),
+                                                              margin: EdgeInsets.fromLTRB(70.sp, 10.sp, 70.sp,30.sp),
+                                                              padding: EdgeInsets.fromLTRB(0.sp, 15.sp, 0.sp,15.sp),
                                                           decoration: BoxDecoration(
-                                                            color: Color.fromRGBO(255, 255, 255, 0.2),
+                                                            color: Color.fromRGBO(255, 255, 255, 0.15),
                                                             borderRadius: BorderRadius.all(Radius.circular(15)),
                                                           ),
                                                               child: Row(
@@ -208,7 +216,7 @@ class todayBodyPage extends StatelessWidget {
                                                                         .center,
                                                                     children: [
                                                                           Container(
-                                                                                height: 170.0.h,
+                                                                                height: 170.0.sp,
                                                                                 child: Column(
                                                                                     mainAxisAlignment: MainAxisAlignment
                                                                                         .start,
@@ -222,8 +230,8 @@ class todayBodyPage extends StatelessWidget {
                                                                                                             child: SvgPicture
                                                                                                                 .asset(
                                                                                                                   "assets/image/drop-cloud.svg",
-                                                                                                                  height: 40.h,
-
+                                                                                                                  height: 40.sp,
+                                                                                                                color: Colors.white
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -233,14 +241,14 @@ class todayBodyPage extends StatelessWidget {
                                                                                                             alignment: Alignment
                                                                                                                 .topCenter,
                                                                                                             child: Text(
-                                                                                                                "${state.loadedWeather.humidity}%"),),
+                                                                                                                "${state.loadedWeather.humidity}%", style: TextStyle(color: Colors.white)),),
                                                                                                 ],
                                                                                           ),
                                                                                     ]
                                                                                 ),
                                                                           ),
                                                                           Container(
-                                                                            height: 170.0.h,
+                                                                            height: 170.0.sp,
                                                                                 child: Column(
                                                                                     mainAxisAlignment: MainAxisAlignment
                                                                                         .end,
@@ -255,7 +263,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                                                 .asset(
                                                                                                                   "assets/image/wind.svg",
                                                                                                                   height: 40.h,
-
+                                                                                                                color: Colors.white
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -265,14 +273,14 @@ class todayBodyPage extends StatelessWidget {
                                                                                                             alignment: Alignment
                                                                                                                 .topCenter,
                                                                                                             child: Text(
-                                                                                                                "${state.loadedWeather.windSpeed} km/h"),),
+                                                                                                                "${state.loadedWeather.windSpeed} km/h", style: TextStyle(color: Colors.white)),),
                                                                                                 ],
                                                                                           ),
                                                                                     ]
                                                                                 ),
                                                                           ),
                                                                           Container(
-                                                                            height: 170.0.h,
+                                                                            height: 170.0.sp,
                                                                                 child: Column(
                                                                                     mainAxisAlignment: MainAxisAlignment
                                                                                         .start,
@@ -287,7 +295,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                                                 .asset(
                                                                                                                   "assets/image/drop.svg",
                                                                                                                   height: 40.h,
-
+                                                                                                                color: Colors.white
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -297,14 +305,14 @@ class todayBodyPage extends StatelessWidget {
                                                                                                             alignment: Alignment
                                                                                                                 .topCenter,
                                                                                                             child: Text(
-                                                                                                                "1.0 mm"),),
+                                                                                                                state.loadedWeather.precipitation == null ? "0 mm" : "${state.loadedWeather.precipitation} mm", style: TextStyle(color: Colors.white)),),
                                                                                                 ],
                                                                                           ),
                                                                                     ]
                                                                                 ),
                                                                           ),
                                                                           Container(
-                                                                            height: 170.0.h,
+                                                                            height: 170.0.sp,
                                                                                 child: Column(
                                                                                     mainAxisAlignment: MainAxisAlignment
                                                                                         .end,
@@ -317,7 +325,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                                                 .asset(
                                                                                                                   "assets/image/compass.svg",
                                                                                                                   height: 40.h,
-
+                                                                                                                color: Colors.white
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -325,13 +333,13 @@ class todayBodyPage extends StatelessWidget {
                                                                                                 children: [
                                                                                                       Container(
                                                                                                             child: Text(
-                                                                                                                "${state.loadedWeather.windDirection()}"),),
+                                                                                                                "${state.loadedWeather.windDirection()}", style: TextStyle(color: Colors.white)),),
                                                                                                 ],
                                                                                           ),
                                                                                     ]),
                                                                           ),
                                                                           Container(
-                                                                            height: 170.0.h,
+                                                                            height: 170.0.sp,
                                                                                 alignment: Alignment
                                                                                     .topCenter,
                                                                                 child: Column(
@@ -346,7 +354,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                                                 .asset(
                                                                                                                   "assets/image/degree-celsius.svg",
                                                                                                                   height: 40.h,
-
+                                                                                                                color: Colors.white
                                                                                                             ),),
                                                                                                 ],
                                                                                           ),
@@ -354,7 +362,7 @@ class todayBodyPage extends StatelessWidget {
                                                                                                 children: [
                                                                                                       Container(
                                                                                                             child: Text(
-                                                                                                                "${state.loadedWeather.pressure} hPa"),),
+                                                                                                                "${state.loadedWeather.pressure} hPa", style: TextStyle(color: Colors.white)),),
                                                                                                 ],
                                                                                           ),
                                                                                     ]
@@ -404,9 +412,6 @@ class todayBodyPage extends StatelessWidget {
                 child: Stack(
                     children: <Widget>[
                       ListView(),
-                      Center(
-                        child: Text("Hello! No data! :(("),
-                      ),
                     ]
                 ),
               ),
@@ -416,5 +421,3 @@ class todayBodyPage extends StatelessWidget {
     );
   }
 }
-
-

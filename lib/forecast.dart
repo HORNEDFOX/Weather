@@ -16,26 +16,34 @@ class Forecast {
   String getIconWeather()
   {
     if (weather == "Clouds") {
-     if (date.hour >= 6 && date.hour <= 17)
-        return "assets/image/Cloud_Sun.svg";
-    else return "assets/image/Cloud_Moon.svg";
+     if (date.hour >= 6 && date.hour <= 17) {
+       return "assets/image/Cloud_Sun.svg";
+     } else {
+       return "assets/image/Cloud_Moon.svg";
+     }
   }
-    if (weather == "Snow") {
-      if (date.hour >= 6 && date.hour <= 17)
+    else if (weather == "Snow") {
+      if (date.hour >= 6 && date.hour <= 17) {
         return "assets/image/Snow_Sun.svg";
-      else return "assets/image/Snow_Moon.svg";
+      } else {
+        return "assets/image/Snow_Moon.svg";
+      }
     }
 
-    if (weather == "Clear") {
-      if (date.hour >= 6 && date.hour <= 17)
+    else if (weather == "Clear") {
+      if (date.hour >= 6 && date.hour <= 17) {
         return "assets/image/sunny.svg";
-      else return "assets/image/Moon.svg";
+      } else {
+        return "assets/image/Moon.svg";
+      }
     }
 
-    if (weather == "Rain") {
-      if (date.hour >= 6 && date.hour <= 17)
+    else if (weather == "Rain") {
+      if (date.hour >= 6 && date.hour <= 17) {
         return "assets/image/Rain_Sun.svg";
-      else return "assets/image/Rain_Moon.svg";
+      } else {
+        return "assets/image/Rain_Moon.svg";
+      }
     }
 
     return "";
@@ -54,7 +62,7 @@ class Forecast {
   {
     print("Погода: $weather");
     print("Температура: $temp°C");
-    print(date);
+    print("$date");
     print("\n______________________________________________\n");
   }
 

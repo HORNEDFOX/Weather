@@ -7,9 +7,10 @@ class Weather extends Forecast{
   final int windSpeed;
   final int wind;
   final int pressure;
+  final int ? precipitation;
 
 
-  Weather({required String weather, required int temp, required DateTime date, required this.city, required this.country, required this.humidity, required this.windSpeed, required this.wind, required this.pressure}) : super(weather: weather, temp: temp, date: date);
+  Weather({this.precipitation, required String weather, required int temp, required DateTime date, required this.city, required this.country, required this.humidity, required this.windSpeed, required this.wind, required this.pressure}) : super(weather: weather, temp: temp, date: date);
 
   @override
   factory Weather.fromJson(Map<String, dynamic> json){
@@ -23,6 +24,7 @@ class Weather extends Forecast{
       wind: json['wind']['deg'] as int,
       pressure: json['main']['pressure'] as int,
       date: DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000),
+      precipitation: json['weather'][0]['main'] == "Snow" ? json['snow']['snow.1h'] : json['rain']['rain.1h'],
     );
   }
 
@@ -68,7 +70,7 @@ class Weather extends Forecast{
       print("Градусы: $wind");
       print("Направление ветра: " + windDirection());
       print("Атмосферное давление: $pressure hPA");
-    print("Дата: $date");
+    print("$date");
     print("\n______________________________________________\n");
   }
 }
