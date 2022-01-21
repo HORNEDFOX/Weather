@@ -24,7 +24,7 @@ class Weather extends Forecast{
       wind: json['wind']['deg'] as int,
       pressure: json['main']['pressure'] as int,
       date: DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000),
-      precipitation: json['weather'][0]['main'] == "Snow" ? json['snow']['snow.1h'] : json['rain']['rain.1h'],
+      //precipitation: json['rain']['rain.1h'] ?? json['snow']['snow.1h'] ?? '0',
     );
   }
 
