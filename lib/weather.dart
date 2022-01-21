@@ -24,7 +24,7 @@ class Weather extends Forecast{
       wind: json['wind']['deg'] as int,
       pressure: json['main']['pressure'] as int,
       date: DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000),
-      //precipitation: json['rain']['rain.1h'] ?? json['snow']['snow.1h'] ?? '0',
+      precipitation: json['weather'][0]['main'] == "Snow" ? json['snow']['snow.1h'] : json['weather'][0]['main'] == "Rain" ? json['rain']['rain.1h'] : 0,
     );
   }
 
@@ -70,7 +70,7 @@ class Weather extends Forecast{
       print("Градусы: $wind");
       print("Направление ветра: " + windDirection());
       print("Атмосферное давление: $pressure hPA");
-    print("$date");
+    print("$precipitation");
     print("\n______________________________________________\n");
   }
 }
