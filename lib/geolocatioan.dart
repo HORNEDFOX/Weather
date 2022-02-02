@@ -17,7 +17,6 @@ Future<Position> getGeoLocationPosition() async {
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-
       return Future.error('Location permissions are denied');
     }
   }
@@ -28,10 +27,12 @@ Future<Position> getGeoLocationPosition() async {
   }
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
-  return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+  return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.bestForNavigation);
 }
 
-Future<void> GetAddressFromLatLong(Position position)async {
-  List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+Future<void> GetAddressFromLatLong(Position position) async {
+  List<Placemark> placemarks =
+      await placemarkFromCoordinates(position.latitude, position.longitude);
   print(placemarks);
 }

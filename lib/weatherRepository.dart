@@ -5,6 +5,9 @@ import 'forecast.dart';
 class WeatherRepository {
   final WeatherService _weatherService = WeatherService();
 
-  Future<Weather> getCurrentWeather(double lat, double lot) => _weatherService.fetchCurrentWeather(lat, lot);
-  Future<List<Forecast>> getForecast(double lat, double lot) => _weatherService.fetchHourlyWeather(lat, lot);
+  Future<Weather> getCurrentWeather(double lat, double lot) =>
+      _weatherService.fetchCurrentWeather(lat, lot);
+
+  Future<List<Forecast>> getForecast(double lat, double lot) =>
+      _weatherService.fetchHourlyWeather(lat, lot);
 }

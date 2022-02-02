@@ -15,7 +15,7 @@ class WeatherService {
     print(lon);*/
 
     if (response.statusCode == 200) {
-     Weather m = Weather.fromJson(json.decode(response.body));
+      Weather m = Weather.fromJson(json.decode(response.body));
       m.display();
       return Weather.fromJson(json.decode(response.body));
     } else {
@@ -30,8 +30,8 @@ class WeatherService {
 
     if (response.statusCode == 200) {
       final jsonData = json.decode(response.body);
-      final List<Forecast> data = (jsonData['list'] as List<dynamic>)
-          .map((item) {
+      final List<Forecast> data =
+          (jsonData['list'] as List<dynamic>).map((item) {
         Forecast l = Forecast.fromJson(item);
         l.display();
         return Forecast.fromJson(item);
@@ -41,5 +41,4 @@ class WeatherService {
       throw Exception('Failed to load weather');
     }
   }
-
 }

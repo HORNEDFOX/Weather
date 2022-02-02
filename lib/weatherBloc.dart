@@ -8,22 +8,23 @@ import 'package:weather/weatherState.dart';
 
 import 'geolocatioan.dart';
 
-class WeatherBloc extends Bloc<WeatherEvent, WeatherState>{
+class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   final WeatherRepository weatherRepository;
 
-  WeatherBloc(this.weatherRepository) : super(WeatherEmptyState()){
+  WeatherBloc(this.weatherRepository) : super(WeatherEmptyState()) {
     on<WeatherRefreshEvent>((event, emit) async {
       emit(WeatherLoadingState());
-      try{
+      try {
         final Position position = await getGeoLocationPosition();
-        final Weather _loadedWeather = await weatherRepository.getCurrentWeather(position.latitude, position.longitude);
-        final List<Forecast> _loadedForecast = await weatherRepository.getForecast(position.latitude, position.longitude);
-        emit(WeatherLoadedState(loadedWeather: _loadedWeather, loadedForecast: _loadedForecast));
-      }
-      catch(_){
+        final Weather _loadedWeather = await weatherRepository
+            .getCurrentWeather(position.latitude, position.longitude);
+        final List<Forecast> _loadedForecast = await weatherRepository
+            .getForecast(position.latitude, position.longitude);
+        emit(WeatherLoadedState(
+            loadedWeather: _loadedWeather, loadedForecast: _loadedForecast));
+      } catch (_) {
         emit(WeatherErrorState());
       }
     });
   }
-
 }

@@ -32,17 +32,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   PageController _pageController = PageController();
   final List<Widget> _screens = [
-    TodayPage(), ForecastPage(),
+    TodayPage(),
+    ForecastPage(),
   ];
 
   int _selectedIndex = 0;
-  void _onPageChanged(int index){
+
+  void _onPageChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  void _onItemTapped(int selectedIndex){
+  void _onItemTapped(int selectedIndex) {
     _pageController.jumpToPage(selectedIndex);
   }
 
@@ -51,42 +53,42 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<WeatherBloc>(
-        create: (context) => WeatherBloc(weatherRepository),
-    child: Scaffold(
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-        Expanded(
-            child: PageView(
-              controller: _pageController,
-              children: _screens,
-              onPageChanged: _onPageChanged,
-              physics: const NeverScrollableScrollPhysics(),
-            ),
+      create: (context) => WeatherBloc(weatherRepository),
+      child: Scaffold(
+        body: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  children: _screens,
+                  onPageChanged: _onPageChanged,
+                  physics: const NeverScrollableScrollPhysics(),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.light_mode),
+              label: 'Today',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.wb_cloudy),
+              label: 'Forecast',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          unselectedItemColor: const Color.fromRGBO(80, 80, 80, 0.4),
+          selectedItemColor: const Color.fromRGBO(40, 40, 40, 0.8),
+          backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
+          elevation: 0.0,
+          onTap: _onItemTapped,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.light_mode),
-            label: 'Today',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.wb_cloudy),
-            label: 'Forecast',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        unselectedItemColor: const Color.fromRGBO(80, 80, 80, 0.4),
-        selectedItemColor: const Color.fromRGBO(40, 40, 40, 0.8),
-        backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
-        elevation: 0.0,
-        onTap: _onItemTapped,
-      ),
-    ),
     );
   }
 }

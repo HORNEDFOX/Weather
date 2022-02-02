@@ -1,9 +1,3 @@
-class WeatherEvent {
+class WeatherEvent {}
 
-}
-
-class WeatherRefreshEvent extends WeatherEvent{
-
-
-}
-
+class WeatherRefreshEvent extends WeatherEvent {}
